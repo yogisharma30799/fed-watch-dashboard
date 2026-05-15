@@ -1,5 +1,5 @@
-import { useState, useMemo } from 'react';
-import { Search, Bell, ShieldAlert, Radio, Settings2, Activity, Landmark, Play, Pause } from 'lucide-react';
+import { useState, useMemo, useRef } from 'react';
+import { Search, Bell, ShieldAlert, Radio, Settings2, Activity, Landmark, Play, Pause, X } from 'lucide-react';
 import { useLiveFeed } from './hooks/useLiveFeed';
 import FeedItem from './components/FeedItem';
 
@@ -9,6 +9,27 @@ function App() {
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedCategory, setSelectedCategory] = useState('All');
   const [highlightSurges, setHighlightSurges] = useState(true);
+  const [notifications, setNotifications] = useState<{ id: number; message: string }[]>([]);
+
+  const lastProcessedId = useRef<number>(0);
+
+  useMemo(() => {
+    if (visibleData.length > 0) {
+      const latest = visibleData[0];
+      if (latest.id > lastProcessedId.current) {
+        if (latest.isInflationSurge && highlightSurges) {
+          const newNotif = { id: Date.now(), message: `CRITICAL: ${latest.source} reports ${latest.displayValue} Inflation Surge!` };
+          setNotifications(prev => [newNotif, ...prev].slice(0, 3));
+
+          // Auto-remove after 5 seconds
+          setTimeout(() => {
+            setNotifications(prev => prev.filter(n => n.id !== newNotif.id));
+          }, 5000);
+        }
+        lastProcessedId.current = latest.id;
+      }
+    }
+  }, [visibleData, highlightSurges]);
 
   const stats = useMemo(() => {
     const alerts = visibleData.filter(d => d.isInflationSurge).length;
@@ -97,8 +118,8 @@ function App() {
               <button
                 onClick={() => setIsPaused(!isPaused)}
                 className={`flex items-center gap-2 px-4 py-2 rounded-xl border transition-all ${isPaused
-                    ? 'bg-blue-600/20 border-blue-500/50 text-blue-400'
-                    : 'bg-slate-900/50 border-slate-800 text-slate-400 hover:text-slate-200'
+                  ? 'bg-blue-600/20 border-blue-500/50 text-blue-400'
+                  : 'bg-slate-900/50 border-slate-800 text-slate-400 hover:text-slate-200'
                   }`}
               >
                 {isPaused ? <Play className="w-4 h-4 fill-current" /> : <Pause className="w-4 h-4 fill-current" />}
@@ -125,8 +146,8 @@ function App() {
                 key={cat}
                 onClick={() => setSelectedCategory(cat)}
                 className={`px-4 py-1.5 rounded-lg text-xs font-semibold transition-all whitespace-nowrap ${selectedCategory === cat
-                    ? 'bg-slate-800 text-white shadow-sm'
-                    : 'text-slate-500 hover:text-slate-300'
+                  ? 'bg-slate-800 text-white shadow-sm'
+                  : 'text-slate-500 hover:text-slate-300'
                   }`}
               >
                 {cat}
@@ -154,6 +175,32 @@ function App() {
           )}
         </div>
       </main>
+
+      {/* Notification Stack */}
+      <div className="fixed top-20 right-4 z-[100] flex flex-col gap-3 pointer-events-none">
+        {notifications.map((notif) => (
+          <div
+            key={notif.id}
+            className="animate-in fade-in slide-in-from-right-8 duration-300 w-80 bg-slate-900/90 border-l-4 border-rose-500 backdrop-blur-xl p-4 rounded-lg shadow-2xl border border-slate-800 pointer-events-auto"
+          >
+            <div className="flex items-start gap-3">
+              <div className="p-2 bg-rose-500/20 rounded-lg">
+                <ShieldAlert className="w-5 h-5 text-rose-500 animate-pulse" />
+              </div>
+              <div className="flex-grow">
+                <h4 className="text-xs font-bold text-rose-400 uppercase tracking-widest mb-1">Alert Triggered</h4>
+                <p className="text-sm text-slate-200 font-medium leading-snug">{notif.message}</p>
+              </div>
+              <button
+                onClick={() => setNotifications(prev => prev.filter(n => n.id !== notif.id))}
+                className="text-slate-600 hover:text-slate-400 transition-colors"
+              >
+                <X className="w-4 h-4" />
+              </button>
+            </div>
+          </div>
+        ))}
+      </div>
 
       {/* Footer Info */}
       <footer className="mt-20 border-t border-slate-900 py-10 text-center">
