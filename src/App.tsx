@@ -1,10 +1,11 @@
 import { useState, useMemo } from 'react';
-import { Search, Bell, ShieldAlert, Radio, Settings2, Filter, Activity, Landmark } from 'lucide-react';
+import { Search, Bell, ShieldAlert, Radio, Settings2, Filter, Activity, Landmark, Play, Pause } from 'lucide-react';
 import { useLiveFeed } from './hooks/useLiveFeed';
 import FeedItem from './components/FeedItem';
 
 function App() {
-  const { visibleData } = useLiveFeed();
+  const [isPaused, setIsPaused] = useState(false);
+  const { visibleData } = useLiveFeed(isPaused);
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedCategory, setSelectedCategory] = useState('All');
   const [highlightSurges, setHighlightSurges] = useState(true);
@@ -27,7 +28,6 @@ function App() {
 
   return (
     <div className="min-h-screen bg-slate-950 text-slate-100 selection:bg-blue-500/30">
-      {/* Navbar / Header */}
       <nav className="sticky top-0 z-50 border-b border-slate-800 bg-slate-950/80 backdrop-blur-md">
         <div className="max-w-5xl mx-auto px-4 h-16 flex items-center justify-between gap-4">
           <div className="flex items-center gap-2">
@@ -42,7 +42,7 @@ function App() {
 
           <div className="flex-grow max-w-md relative group">
             <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-500 group-focus-within:text-blue-400 transition-colors" />
-            <input 
+            <input
               type="text"
               placeholder="Search source (e.g. FED, BLS, BEA)..."
               value={searchTerm}
@@ -94,10 +94,21 @@ function App() {
             </div>
 
             <div className="flex items-center gap-3">
+              <button
+                onClick={() => setIsPaused(!isPaused)}
+                className={`flex items-center gap-2 px-4 py-2 rounded-xl border transition-all ${isPaused
+                    ? 'bg-blue-600/20 border-blue-500/50 text-blue-400'
+                    : 'bg-slate-900/50 border-slate-800 text-slate-400 hover:text-slate-200'
+                  }`}
+              >
+                {isPaused ? <Play className="w-4 h-4 fill-current" /> : <Pause className="w-4 h-4 fill-current" />}
+                <span className="text-xs font-bold uppercase tracking-wider">{isPaused ? 'Resume' : 'Freeze'}</span>
+              </button>
+
               <div className="flex items-center gap-2 px-4 py-2 rounded-xl bg-slate-900/50 border border-slate-800">
                 <ShieldAlert className={highlightSurges ? "w-4 h-4 text-rose-400" : "w-4 h-4 text-slate-600"} />
                 <span className="text-xs font-medium text-slate-300">Surge Alert</span>
-                <button 
+                <button
                   onClick={() => setHighlightSurges(!highlightSurges)}
                   className={`relative inline-flex h-5 w-9 items-center rounded-full transition-colors focus:outline-none ${highlightSurges ? 'bg-blue-600' : 'bg-slate-700'}`}
                 >
@@ -113,11 +124,10 @@ function App() {
               <button
                 key={cat}
                 onClick={() => setSelectedCategory(cat)}
-                className={`px-4 py-1.5 rounded-lg text-xs font-semibold transition-all whitespace-nowrap ${
-                  selectedCategory === cat 
-                    ? 'bg-slate-800 text-white shadow-sm' 
+                className={`px-4 py-1.5 rounded-lg text-xs font-semibold transition-all whitespace-nowrap ${selectedCategory === cat
+                    ? 'bg-slate-800 text-white shadow-sm'
                     : 'text-slate-500 hover:text-slate-300'
-                }`}
+                  }`}
               >
                 {cat}
               </button>
