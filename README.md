@@ -1,73 +1,65 @@
-# React + TypeScript + Vite
+# 📊 FedWatch Dashboard
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+**FedWatch** is a high-end, real-time financial terminal designed for retail investors to monitor economic indicators from the Federal Reserve, BLS, and BEA. It processes "dirty" economic data feeds and provides immediate actionable intelligence through sentiment analysis and surge detection.
 
-Currently, two official plugins are available:
+![Dashboard Preview](https://lucide.dev/api/gh-icon/activity?size=64&color=3b82f6)
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+## ✨ Key Features
 
-## React Compiler
+### 📡 Real-Time Intelligence
+- **Live Feed Engine**: Updates strictly every 2 seconds with fresh economic indicators.
+- **Feed Control**: Integrated "Freeze" capability to pause the stream for detailed inspection.
+- **Zero-Flicker Rendering**: Optimized with React memoization to ensure smooth updates without UI stutter.
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+### 🧠 Calculation Engine (The "CTO Special")
+- **Inflation Surge Detection**: Automatically flags any inflation data point that increases by >5% compared to the previous entry.
+- **Data Normalization**: Clean utility layer that standardizes inconsistent timestamps (Unix/ISO) and values ($1.2B, 950M, 2.4%).
+- **Sentiment Analysis**: Immediate "Bullish" or "Bearish" badges based on economic impact.
 
-## Expanding the ESLint configuration
+### 🎨 Premium Terminal UI
+- **High-End Aesthetic**: Sleek dark-mode interface with glassmorphic components and professional typography (Inter & JetBrains Mono).
+- **Stat Cards**: Real-time tracking of active alerts, unique sources, and feed volume.
+- **Advanced Filtering**: Case-insensitive partial matching for sources and instant category-based tabs.
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+## 🛠️ Tech Stack
 
-```js
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
+- **Core**: [React 19](https://react.dev/) + [Vite](https://vitejs.dev/)
+- **Language**: [TypeScript](https://www.typescriptlang.org/)
+- **Styling**: [Tailwind CSS v4](https://tailwindcss.com/)
+- **Icons**: [Lucide React](https://lucide.dev/)
+- **State Management**: React Hooks (useMemo, useRef, Custom Hooks)
 
-      // Remove tseslint.configs.recommended and replace with this
-      tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      tseslint.configs.stylisticTypeChecked,
+## 🚀 Getting Started
 
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
-```
+### Prerequisites
+- Node.js (v18 or higher)
+- npm or yarn
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+### Installation
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
+1. **Clone the repository**
+   ```bash
+   git clone https://github.com/yogisharma30799/fed-watch-dashboard.git
+   cd fed-watch-dashboard
+   ```
 
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
-```
+2. **Install dependencies**
+   ```bash
+   npm install
+   ```
+
+3. **Start the development server**
+   ```bash
+   npm run dev
+   ```
+
+4. **Build for production**
+   ```bash
+   npm run build
+   ```
+
+## 📄 License
+This project is open-source and available under the [MIT License](LICENSE).
+
+---
+*Built for the Fed-Watch Dashboard Challenge.*
