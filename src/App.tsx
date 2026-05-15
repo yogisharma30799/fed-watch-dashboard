@@ -1,5 +1,5 @@
 import { useState, useMemo } from 'react';
-import { Search, Bell, ShieldAlert, Radio, Settings2, Filter, Activity, Landmark, Play, Pause } from 'lucide-react';
+import { Search, Bell, ShieldAlert, Radio, Settings2, Activity, Landmark, Play, Pause } from 'lucide-react';
 import { useLiveFeed } from './hooks/useLiveFeed';
 import FeedItem from './components/FeedItem';
 
